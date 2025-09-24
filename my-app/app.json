@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "BkCare",
+    "slug": "BkCare",
     "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/bkcare_logo.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {

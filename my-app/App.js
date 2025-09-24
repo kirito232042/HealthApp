@@ -8,6 +8,7 @@ import ManualMeasurement from './src/screens/ManualMeasurement';
 import ProfileDetailScreen from './src/screens/ProfileDetailScreen';
 import NewProfileScreen from './src/screens/NewProfileScreen';
 import MainTabs from './src/screens/MainTabs';
+import SplashScreen from './src/screens/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
           animation: "slide_from_right", 
         }}
       >
+        <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Landing" component={LandingScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />

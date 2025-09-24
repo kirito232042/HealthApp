@@ -9,7 +9,7 @@ export default function LandingScreen({ navigation }) {
     <View style={styles.background}>
       <View style={styles.container}>
         <Image
-          source={require('../../assets/app_logo.jpg')}
+          source={require('../../assets/remove_bg.png')}
           style={styles.logo}
           resizeMode="contain"
         />
