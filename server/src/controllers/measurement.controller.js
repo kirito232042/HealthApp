@@ -3,6 +3,7 @@ const { successResponse, errorResponse } = require("../utils/respondHandler");
 
 exports.createMeasurement = async (req, res) => {
   try {
+    console.log("Request body for creating measurement:", req.body);
     const measurement = await measurementService.create(req.body);
     return successResponse(res, 201, "Measurement created successfully", measurement);
   } catch (err) {

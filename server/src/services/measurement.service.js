@@ -4,6 +4,7 @@ const Profile = require("../models/Profile");
 class MeasurementService {
 
   async create(measurementData) {
+    console.log("Creating measurement with data:", measurementData);
     const measurement = await Measurement.create(measurementData);
     return measurement;
   }

@@ -12,7 +12,7 @@ const Measurement = sequelize.define("Measurement", {
     allowNull: false,
   },
   value: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   unit: {

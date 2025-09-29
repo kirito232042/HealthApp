@@ -4,7 +4,7 @@ const measurementTypes = ["weight", "height", "spo2", "heart_rate", "blood_press
 
 const createMeasurementRules = () => [
   body('type', `Type must be one of: ${measurementTypes.join(', ')}`).isIn(measurementTypes),
-  body('value', 'Value is required and must be a number').isNumeric(),
+  // body('value', 'Value is required and must be a number').isNumeric(),
   body('unit', 'Unit is required').notEmpty().isString(),
   body('userId', 'userId is required and must be an integer').isInt(),
   body('profileId', 'profileId is required and must be an integer').isInt(),
