@@ -57,10 +57,29 @@ export default function ManualMeasurement({ navigation, route }) {
 
     const handleSave = async () => {
         try {
-            // 3. Gọi hàm submit từ hook
-            await submitMeasurements(formState, MEASUREMENT_CONFIG);
-            Alert.alert("Thành công", "Đã lưu các chỉ số!");
-            navigation.goBack();
+            const result = await submitMeasurements(formState, MEASUREMENT_CONFIG);
+        
+        if (result.success) {
+            // Hiển thị thông báo thành công. Sau khi nhấn OK, sẽ quay lại màn hình trước.
+            Alert.alert(
+                "Thành công", 
+                "Đã lưu các chỉ số!",
+                [
+                    { 
+                        text: "OK", 
+                        onPress: () => {
+                            // Sau khi quay lại, nếu có cảnh báo thì hiển thị nó
+                            navigation.goBack();
+                            if (result.warning) {
+                                setTimeout(() => {
+                                    Alert.alert("⚠️ Cảnh báo sức khỏe", result.warning);
+                                }, 200); // Đợi một chút để màn hình chuyển đổi xong
+                            }
+                        } 
+                    }
+                ]
+            );
+        }
         } catch (err) {
             // Lỗi đã được ném ra từ hook và được bắt ở đây
             Alert.alert("Lỗi", err.message || "Không thể lưu chỉ số");

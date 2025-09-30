@@ -5,6 +5,7 @@ import { fetchMainProfile } from "../services/API/userInforService";
 import { fetchAllMeasurements } from "../services/API/measurementsService";
 import { processMeasurements } from "../utils/measurementHomeProcessor";
 
+
 export const useHomeScreenData = () => {
   const [date, setDate] = useState(new Date());
   const [weeksAgo, setWeeksAgo] = useState(1);
@@ -24,7 +25,6 @@ export const useHomeScreenData = () => {
           const measurements = await fetchAllMeasurements(); // Chỉ cập nhật state nếu màn hình vẫn đang active
           if (isActive) {
             if (profile) setMainProfileId(profile.id);
-            console.log("Fetched measurements on focus:", measurements);
             setAllMeasurements(measurements);
             setIsLoading(false); // Dừng loading sau khi có dữ liệu mới
           }

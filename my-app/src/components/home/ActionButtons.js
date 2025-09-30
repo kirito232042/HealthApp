@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Dimensions, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import GradientIcon from '../GradientIcon';
@@ -23,9 +23,22 @@ export default function ActionButtons({ navigation }) {
           <TouchableOpacity
             key={route}
             style={{ flex: 1, marginHorizontal: 5 }}
-            onPressIn={() => setPressedButton(route)}
+            onPressIn={() => {
+              if(route === "Report") {
+                setPressedButton(null);
+                Alert.alert("Thông báo", "Chức năng này sẽ được cập nhật sớm. Vui lòng thử lại sau!");
+                
+                return;
+              }
+              setPressedButton(route)
+            }}
             onPressOut={() => setPressedButton(null)}
-            onPress={() => navigation.navigate(route)}
+            onPress={() =>{
+              if(route === "Report") {
+                return; 
+              }
+              navigation.navigate(route)
+            }}
           >
             <LinearGradient
               colors={["#00E0D3", "#4A90E2"]}
@@ -63,6 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    overflow: 'hidden',
   },
   fillButton: { backgroundColor: "transparent" },
   buttonText: { fontWeight: "500", marginLeft: SCREEN_WIDTH * 0.01, fontSize: SCREEN_WIDTH * 0.04 },

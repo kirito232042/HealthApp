@@ -27,7 +27,11 @@ export default function MeasureTab({ navigation, styles }) {
               onPressOut={() => setPressedButton(null)}
               onPress={() => {
                 if (onPress && navigation) navigation.navigate(onPress);
-                // Nếu là "Bắt đầu đo", bạn thêm logic ở đây nếu cần
+                  if (label === "Bắt đầu đo") {
+                    navigation.navigate('BleMeasureScreen');
+                  } else if (onPress && navigation) {
+                      navigation.navigate(onPress);
+                  }
               }}
               activeOpacity={0.85}
             >
@@ -67,6 +71,7 @@ const localStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    overflow: 'hidden',
   },
   fillButton: { backgroundColor: "transparent" },
   buttonText: {

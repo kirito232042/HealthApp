@@ -28,6 +28,8 @@ export const createMeasurement = async (measurementData) => {
 
   if (!mainProfile) throw new Error("Main profile not found");
   
+  console.log("Creating measurement with data:", measurementData, "for userId:", userId, "and profileId:", mainProfile.id);
+
   const body = {
     ...measurementData,
     userId,
@@ -66,6 +68,8 @@ export const saveManualMeasurements = async (measurementsData, config) => {
             unit: field.unit,
         }))
         .filter(m => m.value !== undefined && m.value !== null && m.value !== "");
+    
+    console.log("Prepared measurements to create:", measurementsToCreate);
 
     if (measurementsToCreate.length === 0) {
         throw new Error("Không có dữ liệu nào để lưu!");

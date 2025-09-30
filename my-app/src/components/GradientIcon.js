@@ -11,7 +11,7 @@ export default function GradientIcon({ name, size }) {
         colors={["#00E0D3", "#4A90E2"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        style={{ width: size, height: size }}
+        style={{ width: size, height: size, borderRadius: size / 4 }}
       />
     </MaskedView>
   );

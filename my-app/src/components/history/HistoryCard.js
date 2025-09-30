@@ -42,8 +42,10 @@ export default function HistoryCard({ item, isSelected, onToggleSelect }) {
       </ScrollView>
 
       <View style={styles.statusRow}>
-        <View style={[styles.statusDot, { backgroundColor: "green" }]} />
-        <Text style={styles.statusText}>Bình thường</Text>
+        <View style={[styles.statusDot, { backgroundColor: item.statusColor || "green" }]} />
+        <Text style={[styles.statusText, { color: item.statusColor || "green" }]}>
+          {item.status || "Bình thường"}
+        </Text>
       </View>
       <Ionicons name="chevron-forward" size={20} color="#999" style={styles.arrowIcon} />
     </View>

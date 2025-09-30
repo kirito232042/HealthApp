@@ -8,6 +8,7 @@ require("./models/association");
 const authRoutes = require("./routes/auth.routes");
 const measurementRoutes = require("./routes/measurement.routes");
 const userInfoRoutes = require("./routes/userinfor.routes");
+const aiRoutes = require("./routes/ai.routes");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/measurements", measurementRoutes);
 app.use("/userinfor", userInfoRoutes);
+app.use("/ai", aiRoutes);
 
 // Sync DB (tự tạo bảng nếu chưa có)
 sequelize.sync({ alter: true })

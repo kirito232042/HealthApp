@@ -13,6 +13,8 @@ export const useMeasurementSubmit = () => {
         try {
             // Gọi vào hàm service đã có sẵn
             await saveManualMeasurements(measurementsData, config);
+            const warning = getWarningMessage(measurementsData);
+            return { success: true, warning };
         } catch (err) {
             setError(err);
             // Ném lỗi ra ngoài để component có thể bắt và xử lý (ví dụ: hiển thị Alert)

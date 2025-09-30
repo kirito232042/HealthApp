@@ -73,7 +73,7 @@ const getLabels = (activeRange, customDateRange) => {
             }
             return labels.length > 7 ? labels.filter((_, i) => i % Math.floor(labels.length / 7) === 0) : labels; // Rút gọn label nếu quá dài
         }
-        case "All": return ["Data"]; // Trả về label đơn giản cho 'All'
+        case "All": return ["Data"];
         default: days = 7;
     }
     
@@ -90,18 +90,31 @@ const getChartValues = (labels, data, activeRange) => {
     }
 
     return labels.map((label) => {
-        const found = data.find((m) => {
+        // 1. Lọc TẤT CẢ các phép đo cho ngày/tháng này
+        const measurementsForLabel = data.filter((m) => {
             const mDate = new Date(m.createdAt);
+            let dateLabel;
             if (activeRange === "1Y") {
-                const dateLabel = `${(mDate.getMonth() + 1).toString().padStart(2, "0")}`;
-                return dateLabel === label;
+                dateLabel = `${(mDate.getMonth() + 1).toString().padStart(2, "0")}`;
+            } else {
+                dateLabel = mDate.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
             }
-            const dateLabel = mDate.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
             return dateLabel === label;
         });
 
-        let val = found?.value;
-        if (found?.type === "blood_pressure" && typeof val === "string" && val.includes("/")) {
+        // Nếu không có phép đo nào, trả về 0
+        if (measurementsForLabel.length === 0) {
+            return 0;
+        }
+
+        // 2. Từ danh sách đã lọc, tìm ra phép đo MỚI NHẤT
+        const latestMeasurement = measurementsForLabel.reduce((latest, current) => {
+            return new Date(current.createdAt) > new Date(latest.createdAt) ? current : latest;
+        });
+
+        // 3. Xử lý giá trị từ phép đo mới nhất
+        let val = latestMeasurement?.value;
+        if (latestMeasurement?.type === "blood_pressure" && typeof val === "string" && val.includes("/")) {
             val = Number(val.split("/")[0]);
         }
         return Number(val) || 0;
@@ -116,7 +129,7 @@ export default function ChartCard({
     customDateRange
 }) {
     // 1. Mỗi Card tự quản lý activeRange của riêng nó
-    const [activeRange, setActiveRange] = useState("1W");
+    const [activeRange, setActiveRange] = useState("1D");
 
     // 2. Tự động chuyển sang 'Tùy chỉnh' khi người dùng chọn ngày từ modal chung
     useEffect(() => {
@@ -124,7 +137,6 @@ export default function ChartCard({
             setActiveRange("Tùy chỉnh");
         }
     }, [customDateRange]);
-
     // 3. Lọc dữ liệu bên trong Card bằng useMemo
     const filteredData = useMemo(() => {
         if (!initialData || initialData.length === 0) return [];
@@ -172,7 +184,6 @@ export default function ChartCard({
     }, [initialData, activeRange, customDateRange]);
 
 
-    // Các tính toán còn lại giờ sẽ dùng `filteredData`
     const displayDate = getDisplayDate(activeRange, customDateRange);
     const labels = getLabels(activeRange, customDateRange);
     const values = getChartValues(labels, filteredData, activeRange);

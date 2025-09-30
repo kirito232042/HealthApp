@@ -1,6 +1,6 @@
 export const groupAndSortMeasurements = (measurements, profileId) => {
   if (!measurements || !profileId) return [];
-
+  console.log("Grouping measurements for profileId:", profileId);
   // 1. Lọc theo profileId
   const filtered = measurements.filter(item => item.profileId === profileId);
 

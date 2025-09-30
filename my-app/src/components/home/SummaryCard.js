@@ -29,7 +29,6 @@ export default function SummaryCard({ data, onWeekChange }) {
       <SummaryRow label="Huyết áp" data={data.summaryBP} />
       <SummaryRow label="Nhịp tim" data={data.summaryHeartRate} />
       <SummaryRow label="SpO₂" data={data.summarySpO2} />
-      <SummaryRow label="Nhiệt độ" data={data.summaryTemperature} />
       
       <View style={styles.summaryRow}>
         <Text style={{ flex: 1 }}>BMI</Text>
