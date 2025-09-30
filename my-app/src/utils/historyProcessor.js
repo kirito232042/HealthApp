@@ -1,3 +1,4 @@
+import { getOverallStatus } from './healthStatus';
 export const groupAndSortMeasurements = (measurements, profileId) => {
   if (!measurements || !profileId) return [];
   console.log("Grouping measurements for profileId:", profileId);
@@ -22,12 +23,17 @@ export const groupAndSortMeasurements = (measurements, profileId) => {
 
   // 3. Chuyển đổi object thành mảng và sắp xếp
   const mergedArray = Object.keys(grouped)
-    .map((key, idx) => ({
-      id: idx + 1, // Tạo ID tạm thời cho FlatList
-      createdAt: grouped[key].createdAt,
-      types: grouped[key].types,
-      ids: grouped[key].ids, // Mảng các ID thực tế để xóa
-    }))
+    .map((key, idx) => {
+      const statusInfo = getOverallStatus(grouped[key].types); // <-- Lấy trạng thái
+      return {
+        id: idx + 1,
+        createdAt: grouped[key].createdAt,
+        types: grouped[key].types,
+        ids: grouped[key].ids,
+        status: statusInfo.status, // <-- Thêm trạng thái vào object
+        statusColor: statusInfo.color, // <-- Thêm màu vào object
+      };
+    })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return mergedArray;

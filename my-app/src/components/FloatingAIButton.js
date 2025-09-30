@@ -24,7 +24,7 @@ export default function FloatingAIButton({ onPress }) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: SCREEN_HEIGHT * 0.17, // Khoảng 10% từ dưới lên
+    bottom: SCREEN_HEIGHT * 0.10, // Khoảng 10% từ dưới lên
     right: SCREEN_WIDTH * 0.05,   // Khoảng 5% từ phải qua
     zIndex: 1000,
   },

@@ -22,6 +22,7 @@ const thresholds = {
  * @returns {string} - Trạng thái 'Bình thường' hoặc 'Nguy hiểm'
  */
 const getIndividualStatus = (type, value) => {
+    console.log(`Evaluating ${type} with value: ${value}`);
   const numValue = parseFloat(value);
   if (isNaN(numValue)) return STATUS.NORMAL;
 
