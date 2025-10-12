@@ -1,51 +1,61 @@
-const User = require("../models/User");
-const passwordUtil = require("../utils/password.util");
-const jwtUtil = require("../utils/jwt.util");
+const supabase = require("../config/db");
+
+// Bạn không cần User model, passwordUtil, hay jwtUtil nữa
+// vì Supabase đã xử lý tất cả những việc này.
 
 class AuthService {
-  async register(email, password) {
-    // 1. Kiểm tra email tồn tại
-    const existing = await User.findOne({ where: { email } });
-    if (existing) {
-      // Ném lỗi để controller bắt được và xử lý
-      const error = new Error("Email already registered");
-      error.statusCode = 400;
-      throw error;
-    }
+  /**
+   * Đăng ký người dùng mới bằng Supabase Auth.
+   * @param {string} email
+   * @param {string} password
+   * @returns {Promise<object>} Đối tượng user từ Supabase.
+   */
+  async register(email, password) {
+    // 1. Gọi phương thức signUp của Supabase
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
-    // 2. Băm mật khẩu
-    const hashedPassword = await passwordUtil.hashPassword(password);
+    // 2. Xử lý lỗi nếu có (ví dụ: email đã tồn tại, mật khẩu yếu)
+    if (error) {
+      const serviceError = new Error(error.message);
+      serviceError.statusCode = error.status || 400;
+      throw serviceError;
+    }
 
-    // 3. Tạo user mới
-    const user = await User.create({ email, password: hashedPassword });
-    
-    // Không trả về mật khẩu
-    const { password: _, ...userWithoutPassword } = user.get({ plain: true });
-    
-    return userWithoutPassword;
-  }
+    // 3. Trả về thông tin người dùng
+    // Lưu ý: Nếu bạn bật xác thực email trong Supabase,
+    // data.user sẽ tồn tại nhưng data.session sẽ là null cho đến khi email được xác thực.
+    return data.user;
+  }
 
-  async login(email, password) {
-    // 1. Tìm user
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      const error = new Error("Invalid credentials");
-      error.statusCode = 400;
-      throw error;
-    }
+  /**
+   * Đăng nhập người dùng bằng Supabase Auth.
+   * @param {string} email
+   * @param {string} password
+   * @returns {Promise<object>} Chứa token và thông tin người dùng.
+   */
+  async login(email, password) {
+    // 1. Gọi phương thức signInWithPassword của Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    // 2. So sánh mật khẩu
-    const isMatch = await passwordUtil.comparePassword(password, user.password);
-    if (!isMatch) {
-      const error = new Error("Invalid credentials");
-      error.statusCode = 400;
-      throw error;
-    }
-    // 3. Tạo JWT
-    const token = jwtUtil.generateToken({ id: user.id });
+    // 2. Xử lý lỗi (sai email hoặc mật khẩu)
+    if (error) {
+      const serviceError = new Error("Invalid credentials");
+      serviceError.statusCode = error.status || 401; // 401 Unauthorized là phù hợp hơn
+      throw serviceError;
+    }
 
-    return { token };
-  }
+    // 3. Trả về token và thông tin người dùng
+    return {
+      token: data.session.access_token,
+      user: data.user,
+    };
+  }
 }
 
 module.exports = new AuthService();

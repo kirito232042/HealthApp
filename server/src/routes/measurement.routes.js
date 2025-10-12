@@ -1,20 +1,17 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const measurementController = require("../controllers/measurement.controller");
-const {
-  createMeasurementRules,
-  getByUserRules,
-  paramIdRules,
-  updateMeasurementRules
-} = require("../middlewares/validators/measurement.validator");
-const { validate } = require("../middlewares/validators/validator");
+const measurementController = require('../controllers/measurement.controller');
+// const authMiddleware = require('../middlewares/auth.middleware'); // Nên có middleware để bảo vệ route
 
-router.post("/", createMeasurementRules(), validate, measurementController.createMeasurement);
+// CRUD Routes
+router.post('/', measurementController.createMeasurement);
+router.get('/user/:userId', measurementController.getAllMeasurementsByUser);
+router.put('/:id', measurementController.updateMeasurement);
+router.delete('/:id', measurementController.deleteMeasurement);
 
-router.get("/all", getByUserRules(), validate, measurementController.getAllMeasurementsByUser);
-
-router.delete("/:id", paramIdRules(), validate, measurementController.deleteMeasurement);
-
-router.put("/:id", updateMeasurementRules(), validate, measurementController.updateMeasurement); // not used
+// Advanced Query Routes
+router.get('/latest-daily', measurementController.getLatestDailyMeasurements);
+router.get('/latest-by-date', measurementController.getLatestForUserByDate); 
+router.get('/latest-in-range', measurementController.getLatestForUserInDateRange);
 
 module.exports = router;
